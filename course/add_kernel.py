@@ -1,17 +1,25 @@
 import os
 import nbformat
 
-folder = "D:/GitHub/HF-notebooks"
+# Root folder where your notebooks live
+root_dir = "D:/GitHub/HF-notebooks"
+
+# The kernelspec to apply
 kernelspec = {
     "display_name": "Python (HF-notebooks)",
     "language": "python",
     "name": "HF-notebooks"
 }
 
-for file in os.listdir(folder):
-    if file.endswith(".ipynb"):
-        path = os.path.join(folder, file)
-        nb = nbformat.read(path, as_version=4)
-        nb.metadata["kernelspec"] = kernelspec
-        nbformat.write(nb, path)
-        print(f"✅ Updated: {file}")
+# Traverse all subdirectories
+for dirpath, dirnames, filenames in os.walk(root_dir):
+    for filename in filenames:
+        if filename.endswith(".ipynb"):
+            full_path = os.path.join(dirpath, filename)
+            try:
+                nb = nbformat.read(full_path, as_version=4)
+                nb.metadata["kernelspec"] = kernelspec
+                nbformat.write(nb, full_path)
+                print(f"✅ Updated: {full_path}")
+            except Exception as e:
+                print(f"❌ Error with {full_path}: {e}")
